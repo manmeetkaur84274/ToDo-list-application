@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+</head>
+<style>
+
+
+</style>
+
+<body class="font-sans min-h-screen flex items-center justify-center p-6 text-slate-800">
+  <main class="w-full max-w-5xl bg-slate-50 rounded-[2rem] shadow-2xl shadow-purple-300/50 overflow-hidden">
+    <header
+      class="bg-gradient-to-br from-violet-500 via-purple-500 to-indigo-500 text-white px-10 pt-8 pb-14 rounded-b-[2.5rem]">
+      <div class="flex items-center justify-between">
+        <!-- <svg class="w-6 h-6 opacity-90" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18M15 3v18"/></svg> -->
+        <h1 id="headerDate" class="text-lg font-semibold">9 nov</h1>
+        <svg class="w-6 h-6 opacity-90" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="9" />
+          <path d="M12 7v5l3 3" />
+        </svg>
+      </div>
+
+      <div class="mt-10">
+        <h2 class="text-4xl font-bold">Today</h2>
+        <p id="taskCount" class="text-sm text-purple-100 mt-1">0 Tasks</p>
+      </div>
+
+      <form id="taskForm" class="mt-8 grid grid-cols-12 gap-3">
+        <input id="input" type="text" required maxlength="60" placeholder="What do you need to do?"
+          class="col-span-12 md:col-span-4 rounded-xl px-4 py-3 text-slate-800 placeholder-slate-400 outline-none focus:ring-4 focus:ring-white/40" />
+
+
+        <div class="col-span-12 md:col-span-2 flex gap-2">
+          <button id="add" type="submit"
+            class="flex-1 bg-white text-violet-600 font-semibold rounded-xl px-4 py-3 shadow hover:bg-violet-50 focus:outline-none focus:ring-4 focus:ring-white/40 transition">Add
+          </button>
+          <button id="saveBtn" type="submit"
+            class="hidden flex-1 bg-white text-violet-600 font-semibold rounded-xl px-4 py-3 shadow hover:bg-violet-50 focus:outline-none focus:ring-4 focus:ring-white/40 transition">save
+          </button>
+          <button id="cancelBtn" type="button"
+            class="hidden rounded-xl px-3 py-3 bg-white/20 hover:bg-white/30 font-medium transition">Cancel</button>
+        </div>
+      </form>
+
+      <div class="cont">
+        <ul class="font-bold  py-5">
+
+
+        </ul>
+      </div>
+
+
+
+    </header>
+
+
+
+
+
+
+    <!-- 
+    <h1>TO DO LIST</h1>
+    <input type="text" placeholder="enter tour task" class="input">
+    <button class="add">add</button>
+    <ul>
+       
+
+    </ul> -->
+
+  </main>
+
+
+
+</body>
+<script>
+
+
+
+  let arr = JSON.parse(localStorage.getItem("arr")) || [];
+
+  let inputbox = document.querySelector("#input")
+  let ulbox = document.querySelector("ul")
+  let button = document.querySelector("#add")
+  let saveBtn = document.querySelector("#saveBtn")
+// let a = [1,2,3]
+// console.log(a[1]);
+// a[1]= 5
+// console.log(a);
+
+function update(index) {
+  console.log(arr[index]);
+  
+    inputbox.value = arr[index];
+    console.log(index);
+    
+    saveBtn.classList.remove("hidden");
+    button.classList.add("hidden");
+
+    saveBtn.onclick = function () {
+      arr[index] = inputbox.value;
+      localStorage.setItem("arr", JSON.stringify(arr));
+      inputbox.value = "";
+      saveBtn.classList.add("hidden");
+      button.classList.remove("hidden");
+      ulbox.innerHTML = "";
+      fetchData();
+    };
+  }
+
+
+  function fetchData() {
+    arr.map((value, index) => {
+      ulbox.innerHTML += ` <div class="cont-box flex align-center gap-5 my-5  shadow-md p-4">
+              <li class="list-none w-[60%] ">${value}</li>  <button onclick="update(${index})" id="update"class="px-8 py-1 border-2 rounded-xl">Update</button>
+        <button onclick="dele(${index})" id="delete"class="px-8 py-1 border-2 rounded-xl">Delete</button>
+
+
+            </div>`
+
+
+    })
+
+  }
+  function dele(index) {
+    console.log(index);
+    let newArr = arr.filter((value, idx) => idx != index)
+
+    console.log(newArr);
+    localStorage.setItem("arr", JSON.stringify(newArr))
+
+    window.location.reload()
+
+
+
+  }
+
+
+
+
+
+  fetchData()
+
+
+  button.addEventListener('click', function () {
+
+    // let a=input.value;
+    if (arr.includes(inputbox.value)) {
+      alert("Alredy exits")
+      return
+    }
+
+    arr.push(inputbox.value)
+
+    // ulbox.innerHTML += ` <div class="cont-box flex align-center gap-5 my-5 shadow-md p-4">
+    //       <li class="list-none w-[60%] ">${value}</li>  <button class="px-8 py-1 border-2 rounded-xl">Update</button>
+    // <button  class="px-8 py-1 border-2 rounded-xl">Delete</button>
+
+
+    //     </div>`
+    fetchData()
+
+
+    localStorage.setItem("arr", JSON.stringify(arr))
+
+    inputbox.value = ""
+
+
+  });
+
+
+</script>
+
+</html>
